@@ -3,6 +3,8 @@ import time
 import imaplib
 import email
 import re
+import string
+
 
 ORG_EMAIL = "@gmail.com"
 FROM_EMAIL = "trackmyfood123" + ORG_EMAIL
@@ -38,15 +40,16 @@ def get_acme():
                             return str(rest)
 
 
-groceryList = get_acme()
 
-import string
-groceryList = groceryList.translate(None,string.ascii_lowercase)
-#print groceryList
+def cleanList(groceryList):
+    groceryList = groceryList.translate(None,string.ascii_lowercase)
+    groceryList = groceryList.split("[: M")[0]
+    groceryList = groceryList.split("//>")[1]
+    return groceryList
 
 
-test ='this is text to keep T N: 2912017050720040050290 [: M ] R F Y <#_-3746339460747013820__3961495309290320556_> $5.00  $50.00'
+lst = get_acme()
 
-groceryList = groceryList.split("[: M")[0]
-groceryList = groceryList.split("//>")[1]
-print groceryList
+final = cleanList(lst)
+
+print final
