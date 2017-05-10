@@ -48,8 +48,24 @@ def cleanList(groceryList):
     return groceryList
 
 
+
+def totalCategories(lst):
+    listOfCats = ["FLUID DAIRY","DAIRY CULTURE","DENTAL HYGIENE", "CEREALS", "COFFEE", "MISC JUICES", "MISC BERRIES", "DETERGENTS-LAUNDRY/DISH"]
+    splitList = re.split(r'\s(?=(?:FLUID DAIRY|DAIRY CULTURE|DENTAL HYGIENE|CEREALS)\b)', lst)
+    for x in splitList[:]:
+        if "FLUID DAIRY" in x:
+            new = x.split("Q/W")
+            print new[0][-1::]
+            for j in new[:]:
+                #print j
+                money = j[-4:]
+                #print money
+                if money.isdigit():
+                    print True
+
 lst = get_acme()
 
 final = cleanList(lst)
 
-print final
+
+totalCategories(final)
