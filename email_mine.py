@@ -104,4 +104,3 @@ final = cleanList(lst)
 
 res = totalCategories(final)
 
-finalArray = np.column_stack((listOfCats, res))
