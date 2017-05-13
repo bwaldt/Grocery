@@ -5,6 +5,12 @@ import email
 import re
 import string
 import numpy as np
+from datetime import datetime
+import matplotlib
+import scipy
+
+
+
 
 ORG_EMAIL = "@gmail.com"
 FROM_EMAIL = "trackmyfood123" + ORG_EMAIL
@@ -35,6 +41,7 @@ def get_acme():
     latest_email_id = int(id_list[-1])
 
     rv = []
+    dates = []
     for i in range(first_email_id, latest_email_id + 1):
         typ, data = mail.fetch(i, '(RFC822)')
         #print data
@@ -43,8 +50,15 @@ def get_acme():
                 msg = email.message_from_string(response_part[1])
                 email_subject = msg['subject']
                 email_from = msg['from']
+                email_date = msg['date']
                 #print email_subject
                 if 'Receipt' in email_subject:
+                    email_date =email_date.split(',')[1]
+                    email_date = email_date.strip()
+                    email_date = email_date.split(' ')
+                    email_date = email_date[0:3]
+                    email_date = ' '.join(email_date)
+                    dates.append(email_date)
                     if msg.is_multipart():
                         for part in msg.walk():
                             body = part.get_payload()
@@ -52,7 +66,7 @@ def get_acme():
                             rest = str(rest)
                             #print rest , '$$$$$$$$$$$$$$'
                             rv.append(rest)
-    return rv
+    return rv , dates
 
 
 def cleanList(groceryList):
@@ -68,7 +82,7 @@ def cleanList(groceryList):
 
 def changeCategoryGroups(groceryList):
     groceryList = groceryList.replace("TORTILLAS", "BREAD")
-    groceryList = groceryList.replace("VEGETABLES CANNED", "VEGTABLES")
+    groceryList = groceryList.replace("VEGETABLES CANNED", "VEGETABLES")
     groceryList = groceryList.replace("BANANAS", "FRUITS")
     groceryList = groceryList.replace("SHREDDED CHEESE", "CHEESE")
     groceryList = groceryList.replace("BEEF", "MEAT")
@@ -91,7 +105,7 @@ def hasNumbers(inputString):
     return bool(re.search(r'\d', inputString))
 
 
-def totalCategories(lst):
+def totalCategories(lst,date):
     """
     
     :param lst: clean grocery list
@@ -100,7 +114,7 @@ def totalCategories(lst):
     listOfCats = ["FLUID DAIRY", "DAIRY CULTURE", "DENTAL HYGIENE", "CEREALS", "COFFEE", "MISC JUICES", "FRUITS",
                   "CLEANING SUPPLIES", "BREAD", "CHEESE", "MEAT", "VEGTABLES","WATER"]
     splitList = re.split(
-        r'\s(?=(?:FLUID DAIRY|DAIRY CULTURE|DENTAL HYGIENE|CEREALS|COFFEE|MISC JUICES|FRUITS|CLEANING SUPPLIES|BREAD|CHEESE|MEAT|VEGTABLES|WATER|\nS)\b)',
+        r'\s(?=(?:FLUID DAIRY|DAIRY CULTURE|DENTAL HYGIENE|CEREALS|COFFEE|MISC JUICES|FRUITS|CLEANING SUPPLIES|BREAD|CHEESE|MEAT|VEGETABLES|WATER|\nS)\b)',
         lst) # split list into smaller list with these breakwords
     array = []
     # iterate through  list
@@ -120,19 +134,28 @@ def totalCategories(lst):
                     #print result, '#####'
                     if result[-1] != "": # if last item of list isnt blank
                         total += float(result[-1]) #add to total for the category
-                rv_1 = y + ": " + str(total)
+                rv_1 = y + "," + str(total) + "," + date
                 #print rv_1 , "######"
                 array.append(rv_1) # append total to the array
     return array
 
 
-lst = get_acme()
+lst , buy_date = get_acme()
 
+print buy_date
 final = []
+index = 0
 for x in lst:
     if len(x) > 10:
-        final = cleanList(x)
-        changedGroups = changeCategoryGroups(final)
-        res = totalCategories(changedGroups)
-        print res
+        cleanedList = cleanList(x)
+        changedGroups = changeCategoryGroups(cleanedList)
+        res = totalCategories(changedGroups,buy_date[index])
+        #print res
+        index += 1
 
+
+
+
+##Convert to date object, deal with later
+datetime_object = datetime.strptime(buy_date[0], '%d %b %Y').date()
+print datetime_object
