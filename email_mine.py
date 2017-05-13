@@ -8,13 +8,13 @@ import numpy as np
 from datetime import datetime
 import matplotlib
 import scipy
-
+import pandas as pd
 
 
 
 ORG_EMAIL = "@gmail.com"
 FROM_EMAIL = "trackmyfood123" + ORG_EMAIL
-FROM_PWD = "peasants"
+FROM_PWD = raw_input("Please Enter Password")
 SMTP_SERVER = "imap.gmail.com"
 SMTP_PORT = 993
 
