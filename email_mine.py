@@ -10,7 +10,7 @@ SMTP_SERVER = "imap.gmail.com"
 SMTP_PORT = 993
 
 listOfCats = ["FLUID DAIRY", "DAIRY CULTURE", "DENTAL HYGIENE", "CEREALS", "COFFEE", "MISC JUICES", "FRUITS",
-                  "CLEANING SUPPLIES", "BREAD", "CHEESE", "MEAT", "VEGETABLES", "WATER"]  # create list of Categories
+                  "CLEANING SUPPLIES", "BREAD", "CHEESE", "MEAT", "VEGETABLES", "WATER", "SNACKS"]  # create list of Categories
 
 
 def get_acme():
@@ -103,7 +103,7 @@ def totalCategories(lst, date):
     """
 
     splitList = re.split(
-        r'\s(?=(?:FLUID DAIRY|DAIRY CULTURE|DENTAL HYGIENE|CEREALS|COFFEE|MISC JUICES|FRUITS|CLEANING SUPPLIES|BREAD|CHEESE|MEAT|VEGETABLES|WATER|\nS)\b)',
+        r'\s(?=(?:FLUID DAIRY|DAIRY CULTURE|DENTAL HYGIENE|CEREALS|COFFEE|MISC JUICES|FRUITS|CLEANING SUPPLIES|BREAD|CHEESE|MEAT|VEGETABLES|WATER|SNACKS|\nS)\b)',
         lst)  # split list into smaller list with these breakwords
     array = []
     # iterate through  list
